@@ -3,26 +3,20 @@ import sys
 
 from pyail import PyAIL
 
-FEEDER_UUID = os.getenv('FEEDER_UUID')
-FEEDER_NAME = os.getenv('FEEDER_NAME')
+class TemplateFeeder:
+    def __init__(self):
+        self.FEEDER_UUID = os.getenv('FEEDER_UUID')
+        self.FEEDER_NAME = os.getenv('FEEDER_NAME')
+        self.FEEDER_ENABLED = os.getenv('FEEDER_ENABLED')
+        self.AIL_URL = os.getenv('AIL_URL')
+        self.AIL_KEY = os.getenv('AIL_KEY')
+        self.AIL_SSLVERIFY = os.getenv('AIL_SSLVERIFY')
+        try:
+            self.AIL = PyAIL(self.AIL_URL, self.AIL_KEY, ssl=self.AIL_SSLVERIFY)
+            print("AIL CONNECTED!\n")
+        except Exception as e:
+            print(e)
+            sys.exit(0)
 
-AIL_URL = os.getenv('AIL_URL')
-AIL_KEY = os.getenv('AIL_KEY')
-
-REDIS_HOST = os.getenv('REDIS_HOST')
-REDIS_PORT = os.getenv('REDIS_PORT')
-REDIS_DB = os.getenv('REDIS_DB')
-
-try:
-    pyail = PyAIL(AIL_URL, AIL_KEY, ssl=False)
-    print("Hello World!")
-except Exception as e:
-    print(e)
-    sys.exit(0)
-
-data = 'my item content'
-metadata = {}
-source = FEEDER_NAME
-source_uuid = FEEDER_UUID
-
-pyail.feed_json_item(data, metadata, source, source_uuid)
+if __name__ == "__main__":
+    Feeder = TemplateFeeder()
