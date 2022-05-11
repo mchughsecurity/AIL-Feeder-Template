@@ -18,14 +18,13 @@ class TemplateFeeder:
         self.REDIS_HOST = os.getenv('REDIS_HOST')
         self.REDIS_PORT = os.getenv('REDIS_PORT')
         self.REDIS_DB = os.getenv('REDIS_DB')
-        self.REDIS = redis.Redis(host=self.REDIS_HOST,port=self.REDIS_PORT,db=self.REDIS_DB)
+        self.REDIS = redis.Redis(host=self.REDIS_HOST, port=self.REDIS_PORT, db=self.REDIS_DB)
 
         try:
 
             logging.info("Creating test payload...\n")
             test_payload = 'Test string being submitted to AIL via PyAIL';
-            test_payload_meta = {}
-            test_payload_meta['some_attribute'] = 'some value'
+            test_payload_meta = {'some_attribute': 'some value'}
 
             logging.info("Testing connection to AIL...\n")
             self.PYAIL = PyAIL(self.AIL_URL, self.AIL_KEY, ssl=False)
@@ -34,13 +33,13 @@ class TemplateFeeder:
                                                                                             self.AIL_SSLVERIFY))
 
             # Send the test payload to AIL
-            self.send_to_ail(data=test_payload,meta=test_payload_meta)
+            self.send_to_ail(data=test_payload, meta=test_payload_meta)
 
         except Exception as e:
             print(e)
             sys.exit(0)
 
-    def construct_item_text(self,type,tags,text):
+    def construct_item_text(self, type, tags, text):
         ail_data = {
             'type': type,
             'tags': tags,
@@ -48,7 +47,7 @@ class TemplateFeeder:
         }
         return ail_data
 
-    def send_to_ail(self,data,meta):
+    def send_to_ail(self, data, meta):
         try:
             response = self.PYAIL.feed_json_item(
                 data=data,
@@ -60,6 +59,7 @@ class TemplateFeeder:
         except Exception as e:
             print(e)
             sys.exit(0)
+
 
 if __name__ == "__main__":
     logging.basicConfig(format='%(asctime)s %(name)s %(levelname)s:%(message)s', level=logging.INFO, datefmt='%I:%M:%S')
